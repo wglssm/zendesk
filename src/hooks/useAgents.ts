@@ -3,7 +3,7 @@ import type { Agent } from "../types/agent";
 import { fetchAgents as fetchAgentsApi } from "../api/agents";
 
 /**
- * Custom hook for fetching and managing agents data with sorting and filtering
+ * Custom hook for fetching,sorting and filtering agents data
  * @returns Object containing agents data and controls
  */
 export function useAgents() {

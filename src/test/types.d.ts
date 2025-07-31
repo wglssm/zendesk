@@ -11,5 +11,4 @@ declare global {
   }
 }
 
-// This exports an empty object to make this file a module
 export {};

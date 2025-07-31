@@ -54,13 +54,14 @@ describe("useAgents Hook", () => {
     const sortedAgents = result.current.agents;
     expect(sortedAgents).toHaveLength(4);
 
+    // sort by online status first, then by first name
     expect(sortedAgents[0].first_name).toBe("April");
     expect(sortedAgents[0].status).toBe("online");
     expect(sortedAgents[1].first_name).toBe("Leslie");
     expect(sortedAgents[1].status).toBe("online");
 
-    expect(sortedAgents[2].status).not.toBe("online");
-    expect(sortedAgents[3].status).not.toBe("online");
+    expect(sortedAgents[2].status).toBe("offline");
+    expect(sortedAgents[3].status).toBe("offline");
   });
 
   it("filters agents by status", async () => {
@@ -87,7 +88,7 @@ describe("useAgents Hook", () => {
     });
   });
 
-  it("handles API errors gracefully", async () => {
+  it("handles API errors", async () => {
     const errorMessage = "API error";
     vi.mocked(apiModule.fetchAgents).mockRejectedValueOnce(
       new Error(errorMessage)
