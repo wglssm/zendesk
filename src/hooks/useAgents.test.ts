@@ -41,7 +41,7 @@ describe("useAgents Hook", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(apiModule.fetchAgents).mockReturnValue(mockAgents);
+    vi.mocked(apiModule.fetchAgents).mockResolvedValue(mockAgents);
   });
 
   it("fetches and sorts agents by online status and then by name", async () => {

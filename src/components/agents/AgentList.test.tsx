@@ -22,6 +22,11 @@ function mockUseAgents({
   loading = false,
   error = null,
   statusFilter = "all",
+}: {
+  agents?: Agent[];
+  loading?: boolean;
+  error?: any;
+  statusFilter?: string;
 } = {}) {
   return {
     agents,
@@ -34,7 +39,7 @@ function mockUseAgents({
 }
 
 vi.mock("../../hooks/useAgents", () => ({
-  useAgents: vi.fn(),
+  useAgents: vi.fn() as unknown as typeof useAgents,
 }));
 
 describe("AgentList", () => {
@@ -43,7 +48,7 @@ describe("AgentList", () => {
   });
 
   it("renders loading state", () => {
-    useAgents.mockReturnValue(mockUseAgents({ loading: true }));
+    vi.mocked(useAgents).mockReturnValue(mockUseAgents({ loading: true }));
     render(<AgentList />);
     expect(screen.getByText(/Loading agents/i)).toBeInTheDocument();
     expect(
@@ -52,18 +57,30 @@ describe("AgentList", () => {
   });
 
   it("renders empty state when no agents", () => {
-    useAgents.mockReturnValue(mockUseAgents({ agents: [] }));
+    vi.mocked(useAgents).mockReturnValue(mockUseAgents({ agents: [] }));
     render(<AgentList />);
     expect(screen.getByTestId("agent-list-container")).toBeInTheDocument();
     expect(screen.getByText(/No agents available/i)).toBeInTheDocument();
   });
 
   it("renders agent cards when agents are present", () => {
-    const agents = [
-      { first_name: "Alice", last_name: "Smith" },
-      { first_name: "Bob", last_name: "Jones" },
+    const agents: Agent[] = [
+      {
+        first_name: "Alice",
+        last_name: "Smith",
+        status: "online",
+        profile: "agent",
+        avatar: "",
+      },
+      {
+        first_name: "Bob",
+        last_name: "Jones",
+        status: "offline",
+        profile: "agent",
+        avatar: "",
+      },
     ];
-    useAgents.mockReturnValue(mockUseAgents({ agents }));
+    vi.mocked(useAgents).mockReturnValue(mockUseAgents({ agents }));
     render(<AgentList />);
     expect(screen.getByTestId("agent-list-container")).toBeInTheDocument();
     expect(screen.getAllByTestId("agent-card")).toHaveLength(2);
@@ -72,7 +89,9 @@ describe("AgentList", () => {
   });
 
   it("renders status filter select and handles change", () => {
-    useAgents.mockReturnValue(mockUseAgents({ statusFilter: "online" }));
+    vi.mocked(useAgents).mockReturnValue(
+      mockUseAgents({ statusFilter: "online" })
+    );
     render(<AgentList />);
     const select = screen.getByTestId("status-filter-select");
     expect(select).toBeInTheDocument();
@@ -82,7 +101,7 @@ describe("AgentList", () => {
   });
 
   it("renders correct filter options", () => {
-    useAgents.mockReturnValue(mockUseAgents());
+    vi.mocked(useAgents).mockReturnValue(mockUseAgents());
     render(<AgentList />);
     const select = screen.getByTestId("status-filter-select");
     expect(select).toBeInTheDocument();
